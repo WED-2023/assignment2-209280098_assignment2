@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Game - Play</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="scripts.js" defer></script>
+</head>
+<body id="game-body">
+
+<!-- Game Header -->
+<header id="game-header">
+    <div id="menu-button">☰</div>
+    <div id="game-info">
+        <div id="player-info">
+            <span id="player-username">User-Name</span>
+        </div>
+        <div id="timer-container">
+            Time - <span id="game-timer">00:00</span>
+        </div>
+        <div id="score-container">
+            Score - <span id="game-score">0</span>
+        </div>
+        <div id="lives-container">
+            Lives - <span id="game-lives">3</span>
+        </div>
+    </div>
+</header>
+
+<!-- Game Pause Menu -->
+<div id="pause-menu" class="hidden">
+    <div id="pause-container">
+        <h2 id="pause-title">Game Pause</h2>
+        <button id="resume-button" class="game-button">Resume Game</button>
+        <button id="exit-button" class="game-button">Exit</button>
+    </div>
+</div>
+
+<!-- Countdown Overlay -->
+<div id="countdown-overlay" class="hidden">
+    <div id="countdown">3</div>
+</div>
+
+<!-- Exit Confirmation -->
+<div id="exit-confirm" class="hidden">
+    <div id="exit-confirm-container">
+        <h2 id="exit-confirm-title">Are you sure you want to exit?</h2>
+        <div id="exit-buttons">
+            <button id="confirm-exit-yes" class="game-button">Yes</button>
+            <button id="confirm-exit-no" class="game-button">No</button>
+        </div>
+    </div>
+</div>
+
+<!-- Game End Screen -->
+<div id="game-end" class="hidden">
+    <div id="game-end-container">
+        <h2 id="game-result">Game Over!</h2>
+        <div id="final-score">Final Score: <span id="final-score-value">0</span></div>
+        <div id="game-status"></div>
+        <button id="back-to-config" class="game-button">Start New Game</button>
+    </div>
+</div>
+
+<!-- Main Game Area -->
+<div id="game-area">
+    <!-- Enemy Ships Container -->
+    <div id="enemy-ships-container"></div>
+
+    <!-- Player Ship -->
+    <div id="player-ship"></div>
+
+    <!-- Projectiles Container -->
+    <div id="projectiles-container"></div>
+</div>
+
+</body>
+</html>

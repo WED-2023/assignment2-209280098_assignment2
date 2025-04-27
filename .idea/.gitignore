@@ -1,0 +1,38 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Node.js dependencies (if using npm)
+node_modules/
+
+# IDE/Editor folders
+.vscode/
+.idea/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Build output (if applicable)
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.bak
+
+# Configuration files
+.env
+
+# Ignore any files/folders related to testing or coverage reports
+coverage/
+
+# Ignore specific files (e.g. password files, API keys, etc.)
+*.env

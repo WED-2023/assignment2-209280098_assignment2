@@ -1,0 +1,896 @@
+/* סגנון עבור חלליות האויב */
+.enemy-ship {
+    width: 40px;
+    height: 30px;
+    background-color: rgba(153, 126, 33, 0.83);
+    position: absolute;
+    border-radius: 5px;
+}
+
+/* סגנון עבור חללית השחקן */
+#player-ship {
+    width: 50px;
+    height: 40px;
+    position: absolute;
+    border-radius: 5px;
+}
+
+/* סגנון עבור כדור שנורה מהשחקן */
+.player-projectile {
+    width: 4px;
+    height: 15px;
+    background-color: #00ff00;
+    position: absolute;
+}
+
+/* סגנון עבור כדור שנורה מהאויב */
+.enemy-projectile {
+    width: 4px;
+    height: 15px;
+    background-color: #ff0000;
+    position: absolute;
+}
+
+/* אנימציית פגיעה בשחקן */
+.hit {
+    animation: hitAnimation 0.5s;
+}
+
+@keyframes hitAnimation {
+    0% { opacity: 1; }
+    25% { opacity: 0.5; }
+    50% { opacity: 1; }
+    75% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* סגנון למסכי המשחק */
+#game-area {
+    width: 100%;
+    height: calc(100vh - 60px);
+    position: relative;
+    overflow: hidden;
+    background-color: #000;
+}
+
+#enemy-ships-container {
+    width: 100%;
+    height: 70%;
+    position: relative;
+}
+
+#projectiles-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+/***************************************** GLOBAL STYLES ******************************************************/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #0c0e1a;
+    color: #e0e0ff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    background-image: radial-gradient(circle at 50% 50%, #1a1b40 0%, #0c0e1a 100%);
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="white" opacity="0.3"/></svg>');
+    z-index: -1;
+    pointer-events: none;
+}
+
+#content {
+    flex: 1;
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-button {
+    background: linear-gradient(135deg, #7e4bff 0%, #4e00c2 100%);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 10px 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(78, 0, 194, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    outline: none;
+}
+
+.action-button:hover {
+    background: linear-gradient(135deg, #8a5aff 0%, #5a0ddb 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(78, 0, 194, 0.4);
+}
+
+.action-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(78, 0, 194, 0.4);
+}
+
+.input-field {
+    padding: 12px 20px;
+    border-radius: 30px;
+    border: 2px solid #434399;
+    background-color: rgba(30, 32, 70, 0.7);
+    color: #e0e0ff;
+    width: 100%;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.input-field:focus {
+    border-color: #7e4bff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(126, 75, 255, 0.2);
+}
+
+/* Form styles */
+form {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #a5a8ff;
+    font-weight: 500;
+}
+
+/* Hide scrollbar but maintain functionality */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+/***************************************** INDEX.HTML STYLES ******************************************************/
+/* Header styles */
+#header {
+    background-color: rgba(13, 15, 38, 0.8);
+    padding: 10px 20px;
+    border-bottom: 2px solid #383d8b;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+#logo-img {
+    height: 50px;
+    margin-right: 10px;
+}
+
+#game-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #7e4bff, #ff4bec);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 15px rgba(126, 75, 255, 0.3);
+}
+
+/* Navigation styles */
+#main-nav {
+    background-color: rgba(20, 22, 55, 0.95);
+    padding: 12px 0;
+    width: 100%;
+    border-bottom: 1px solid #383d8b;
+}
+
+#nav-list {
+    display: flex;
+    justify-content: flex-start;
+    list-style-type: none;
+    padding: 0 20px;
+}
+
+#nav-list li {
+    margin-right: 30px;
+}
+
+#nav-list a {
+    color: #a5a8ff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 0;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+#nav-list a::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #7e4bff;
+    transition: width 0.3s ease;
+}
+
+#nav-list a:hover {
+    color: #e0e0ff;
+}
+
+#nav-list a:hover::before {
+    width: 100%;
+}
+
+/* Welcome Screen */
+#welcome-screen {
+    text-align: center;
+    padding: 50px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#welcome-header {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #7e4bff, #ff4bec);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 30px rgba(126, 75, 255, 0.5);
+}
+
+#welcome-subheader {
+    font-size: 1.4rem;
+    color: #a5a8ff;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+/* Footer */
+#footer {
+    background-color: rgba(13, 15, 38, 0.9);
+    padding: 15px 20px;
+    font-size: 0.9rem;
+    text-align: left;
+    color: #7a7ab3;
+    width: 100%;
+    border-top: 1px solid #383d8b;
+    margin-top: auto;
+}
+
+#email-link {
+    color: #a5a8ff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+#email-link:hover {
+    color: #7e4bff;
+    text-decoration: underline;
+}
+
+#copyright {
+    margin-top: 5px;
+}
+
+/***************************************** LOGIN.HTML STYLES ******************************************************/
+#login-content {
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    background-color: rgba(15, 18, 40, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid #383d8b;
+    margin: 40px auto;
+}
+
+#login-header {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 30px;
+    background: linear-gradient(90deg, #7e4bff, #ff4bec);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+#register-redirect {
+    background: none;
+    border: none;
+    color: #7e4bff;
+    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 0;
+    font-size: 1rem;
+}
+
+#register-redirect:hover {
+    color: #9670ff;
+    text-decoration: underline;
+}
+
+#register-link-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #a5a8ff;
+}
+
+/***************************************** REGISTER.HTML STYLES ******************************************************/
+#register-content {
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    background-color: rgba(15, 18, 40, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid #383d8b;
+    margin: 30px auto;
+}
+
+#register-header {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 30px;
+    background: linear-gradient(90deg, #7e4bff, #ff4bec);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+#login-redirect {
+    background: none;
+    border: none;
+    color: #7e4bff;
+    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 0;
+    font-size: 1rem;
+}
+
+#login-redirect:hover {
+    color: #9670ff;
+    text-decoration: underline;
+}
+
+#login-redirect-button {
+    text-align: center;
+    margin-top: 20px;
+    color: #a5a8ff;
+}
+
+/***************************************** CONFIGURATION.HTML STYLES ******************************************************/
+#configuration-content {
+    width: 100%;
+    max-width: 800px;
+    padding: 30px;
+    background-color: rgba(15, 18, 40, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid #383d8b;
+    margin: 30px auto;
+}
+
+#welcome-header {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #7e4bff, #ff4bec);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+#username-display {
+    color: #ff4bec;
+    font-weight: bold;
+}
+
+#game-settings {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: rgba(20, 22, 55, 0.5);
+    border-radius: 15px;
+    border: 1px solid #383d8b;
+}
+
+#settings-header {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #a5a8ff;
+    text-align: center;
+}
+
+.color-btn {
+    background-color: #383d8b;
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin: 0 15px;
+    transition: all 0.3s ease;
+}
+
+.color-btn:hover {
+    background-color: #4c51b5;
+    transform: scale(1.1);
+}
+
+#selected-color {
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+    font-weight: 500;
+    color: #e0e0ff;
+}
+
+#game-time-minutes, #game-time-seconds {
+    width: 60px;
+    text-align: center;
+}
+
+#ship-color-label, #fire-key-label, #game-time-label {
+    margin-top: 15px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Leaderboard styles */
+#leaderboard-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: rgba(20, 22, 55, 0.5);
+    border-radius: 15px;
+    border: 1px solid #383d8b;
+    width: 100%;
+}
+
+#leaderboard-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #a5a8ff;
+    text-align: center;
+}
+
+#leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#leaderboard-table th, #leaderboard-table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #383d8b;
+}
+
+#leaderboard-table th {
+    background-color: rgba(30, 32, 70, 0.8);
+    color: #e0e0ff;
+    font-weight: 500;
+}
+
+#leaderboard-table tr:nth-child(even) {
+    background-color: rgba(30, 32, 70, 0.4);
+}
+
+#leaderboard-table tr:nth-child(odd) {
+    background-color: rgba(20, 22, 55, 0.4);
+}
+
+#leaderboard-table tr:hover {
+    background-color: rgba(78, 0, 194, 0.2);
+}
+
+/***************************************** ABOUT.HTML STYLES ******************************************************/
+#about-content {
+    width: 100%;
+    max-width: 800px;
+    padding: 30px;
+    background-color: rgba(15, 18, 40, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid #383d8b;
+    margin: 30px auto;
+}
+
+#about-content h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 30px;
+    background: linear-gradient(90deg, #7e4bff, #ff4bec);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+#about-content p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #a5a8ff;
+}
+
+/***************************************** CONTACT.HTML STYLES ******************************************************/
+#contact-content {
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    background-color: rgba(15, 18, 40, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid #383d8b;
+    margin: 30px auto;
+}
+
+#contact-content h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 30px;
+    background: linear-gradient(90deg, #7e4bff, #ff4bec);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+#message {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 15px;
+    border: 2px solid #434399;
+    background-color: rgba(30, 32, 70, 0.7);
+    color: #e0e0ff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    resize: vertical;
+}
+
+#message:focus {
+    border-color: #7e4bff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(126, 75, 255, 0.2);
+}
+
+/***************************************** GAME.HTML STYLES ******************************************************/
+#game-body {
+    background-color: #050518;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><circle cx="10" cy="10" r="1" fill="white" opacity="0.3"/><circle cx="40" cy="30" r="0.8" fill="white" opacity="0.3"/><circle cx="80" cy="70" r="1.2" fill="white" opacity="0.4"/><circle cx="130" cy="50" r="0.7" fill="white" opacity="0.2"/><circle cx="170" cy="90" r="1" fill="white" opacity="0.3"/><circle cx="20" cy="120" r="0.9" fill="white" opacity="0.3"/><circle cx="70" cy="150" r="1.1" fill="white" opacity="0.4"/><circle cx="130" cy="130" r="0.8" fill="white" opacity="0.3"/><circle cx="180" cy="170" r="1" fill="white" opacity="0.3"/></svg>');
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#game-header {
+    background-color: rgba(13, 15, 38, 0.9);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #383d8b;
+    height: 60px;
+    backdrop-filter: blur(10px);
+}
+
+#menu-button {
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #a5a8ff;
+    transition: color 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+#menu-button:hover {
+    color: #7e4bff;
+    background-color: rgba(126, 75, 255, 0.1);
+}
+
+#game-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#player-username, #game-timer, #game-score, #game-lives {
+    font-weight: bold;
+    color: #e0e0ff;
+}
+
+#player-username {
+    color: #ff4bec;
+}
+
+/* Game Area */
+#game-area {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #050518 60%, #090830 100%);
+}
+
+/* Pause Menu, Exit Confirm and Game End Overlay */
+.hidden {
+    display: none !important;
+}
+
+#pause-menu, #exit-confirm, #game-end, #countdown-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(5, 5, 24, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#pause-container, #exit-confirm-container, #game-end-container {
+    background-color: rgba(15, 18, 40, 0.9);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid #383d8b;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
+
+#pause-title, #exit-confirm-title, #game-result {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    background: linear-gradient(90deg, #7e4bff, #ff4bec);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+#final-score, #game-status {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: #a5a8ff;
+}
+
+#final-score-value {
+    font-weight: bold;
+    color: #ff4bec;
+}
+
+.game-button {
+    background: linear-gradient(135deg, #7e4bff 0%, #4e00c2 100%);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 10px 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(78, 0, 194, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.game-button:hover {
+    background: linear-gradient(135deg, #8a5aff 0%, #5a0ddb 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(78, 0, 194, 0.4);
+}
+
+#countdown {
+    font-size: 8rem;
+    color: #7e4bff;
+    font-weight: bold;
+    text-shadow: 0 0 20px rgba(126, 75, 255, 0.8);
+    animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+    from { opacity: 0.7; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1.05); }
+}
+
+/* Enemy ship design */
+.enemy-ship {
+    width: 50px;
+    height: 35px;
+    position: absolute;
+    background: linear-gradient(to bottom, #ff4bec, #7e4bff);
+    border-radius: 50% 50% 10% 10% / 60% 60% 40% 40%;
+    box-shadow: 0 0 10px #ff4bec, 0 0 20px rgba(255, 75, 236, 0.5);
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+.enemy-ship::before {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    top: 50%;
+    left: 20%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 10px white;
+}
+
+.enemy-ship::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 0 6px 10px 6px;
+    border-color: transparent transparent rgba(255, 75, 236, 0.8) transparent;
+    bottom: -10px;
+    left: calc(50% - 6px);
+}
+
+/* Player ship design */
+#player-ship {
+    width: 60px;
+    height: 40px;
+    position: absolute;
+    border-radius: 10% 10% 50% 50% / 40% 40% 60% 60%;
+    transform-style: preserve-3d;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 15px rgba(126, 75, 255, 0.8);
+}
+
+#player-ship::before {
+    content: '';
+    position: absolute;
+    width: 70%;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    top: 40%;
+    left: 15%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 10px white;
+}
+
+#player-ship::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 12px 8px 0 8px;
+    border-color: rgba(126, 75, 255, 0.8) transparent transparent transparent;
+    top: -12px;
+    left: calc(50% - 8px);
+}
+
+/* Projectile styles */
+.player-projectile {
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(to top, #7e4bff, #e0e0ff);
+    position: absolute;
+    border-radius: 4px;
+    box-shadow: 0 0 8px #7e4bff;
+}
+
+.enemy-projectile {
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(to bottom, #ff4bec, #e0e0ff);
+    position: absolute;
+    border-radius: 4px;
+    box-shadow: 0 0 8px #ff4bec;
+}
+
+/* Hit animation */
+.hit {
+    animation: hitAnimation 0.5s;
+}
+
+@keyframes hitAnimation {
+    0% { opacity: 1; transform: scale(1); box-shadow: 0 0 30px red; }
+    25% { opacity: 0.7; transform: scale(1.1); }
+    50% { opacity: 1; transform: scale(1); }
+    75% { opacity: 0.7; transform: scale(1.1); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    #welcome-header {
+        font-size: 2.2rem;
+    }
+
+    #welcome-subheader {
+        font-size: 1.2rem;
+    }
+
+    #game-info {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    #configuration-content, #register-content, #login-content {
+        padding: 20px;
+    }
+
+    #nav-list {
+        justify-content: center;
+    }
+
+    #nav-list li {
+        margin: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    #welcome-header {
+        font-size: 1.8rem;
+    }
+
+    #login-header, #register-header {
+        font-size: 2rem;
+    }
+
+    .action-button {
+        padding: 10px 24px;
+        font-size: 0.9rem;
+    }
+
+    #configuration-content, #register-content, #login-content, #about-content, #contact-content {
+        padding: 15px;
+    }
+
+    #countdown {
+        font-size: 6rem;
+    }
+}

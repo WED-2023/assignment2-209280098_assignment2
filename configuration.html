@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body id="body">
+<!-- Content -->
+<div id="content">
+    <!-- Configuration Screen -->
+    <div id="configuration-content">
+        <h1 id="welcome-header">Welcome, <span id="username-display">User</span>!</h1>
+
+        <!-- Game Settings -->
+        <div id="game-settings">
+            <h2 id="settings-header">Game Settings</h2>
+
+            <!-- Select Fire Key -->
+            <label for="fire-key" id="fire-key-label">Select Fire Key:</label>
+            <input type="text" id="fire-key" class="input-field"  placeholder="Press a key" required><br><br>
+
+            <!-- Game Time -->
+            <label for="game-time-minutes" id="game-time-label">Set Game Time (mm:ss):</label>
+            <input type="text" id="game-time-minutes" class="input-field" maxlength="2" placeholder="mm" required> :
+            <input type="text" id="game-time-seconds" class="input-field" maxlength="2" placeholder="ss" required><br><br>
+
+            <!-- Select Ship Color -->
+            <label id="ship-color-label">Select Ship Color:</label>
+            <button type="button" class="color-btn" id="color-left">←</button>
+            <span id="selected-color">Red</span>
+            <button type="button" class="color-btn" id="color-right">→</button><br><br>
+
+            <!-- Buttons for Start Game and Show Leaderboard -->
+            <button id="start-new-game" class="action-button">Start New Game</button><br><br>
+            <button id="show-leaderboard" class="action-button">Show Leaderboard</button>
+        </div>
+
+        <!-- Leaderboard Section (Initially Hidden) -->
+        <div id="leaderboard-section" style="display:none;">
+            <h2 id="leaderboard-title">Leaderboard</h2>
+            <table id="leaderboard-table">
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Score</th>
+                </tr>
+                <!-- Initially Empty, Will be Populated by JavaScript -->
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
