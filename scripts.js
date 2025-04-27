@@ -1,3 +1,4 @@
+scripts.js
 /*****************************************  Preperation and Index.html ******************************************************/
 // Function to preload all pages in the background
 
@@ -406,21 +407,21 @@ function startNewGame() {
 
     }
 }
-    function validateAllFields() {
-        if (selectedFireKey === "") {
-            document.getElementById("fire-key").focus();
-            return false;
-        }
-
-        const minutesInput = document.getElementById("game-time-minutes");
-        const secondsInput = document.getElementById("game-time-seconds");
-
-        if (!minutesInput.value || !secondsInput.value) {
-            return false;
-        }
-
-        return true;
+function validateAllFields() {
+    if (selectedFireKey === "") {
+        document.getElementById("fire-key").focus();
+        return false;
     }
+
+    const minutesInput = document.getElementById("game-time-minutes");
+    const secondsInput = document.getElementById("game-time-seconds");
+
+    if (!minutesInput.value || !secondsInput.value) {
+        return false;
+    }
+
+    return true;
+}
 
 function toggleLeaderboard() {
     const leaderboardSection = document.getElementById("leaderboard-section");
@@ -615,7 +616,7 @@ function startEnemyMovement() {
         if (!gameActive || gamePaused) return;
 
         if (accelerationCount < 4) { // Maximum 4 Accelerations
-            speedFactor += 0.25;
+            speedFactor += 3;
             accelerationCount++;
         }
     }, 5000);

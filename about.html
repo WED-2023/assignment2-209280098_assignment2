@@ -4,11 +4,18 @@
 
 <!-- Content -->
 <div id="content">
-    <div id="about-content">
-        <h1>About Me</h1>
-        <p>Hi, my name is Lidor Mashiach. I developed this website/game during my third year in the Software and Information Systems Engineering program. The goal of this project was to create an engaging space game as part of my studies, combining both front-end and back-end development techniques.</p>
-        <p>Throughout this project, I learned how to work with various technologies, such as HTML, CSS, JavaScript, and integrating dynamic content using JavaScript. I hope you enjoy the game and feel free to reach out if you have any questions!</p>
+    <!-- Modal for About -->
+    <div id="about-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAboutModal()">×</span>
+            <h1>About Me</h1>
+            <p>Hi, my name is Lidor Mashiach. I developed this website/game during my third year in the Software and Information Systems Engineering program. The goal of this project was to create an engaging space game as part of my studies, combining both front-end and back-end development techniques.</p>
+            <p>Throughout this project, I learned how to work with various technologies, such as HTML, CSS, JavaScript, and integrating dynamic content using JavaScript. I hope you enjoy the game and feel free to reach out if you have any questions!</p>
+        </div>
     </div>
+
+    <!-- Regular content -->
+    <button id="about-link" onclick="openAboutModal()">About</button>
 </div>
 
 </body>
