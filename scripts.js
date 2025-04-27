@@ -7,7 +7,7 @@ const globalPreloadedPages = {};
 
 
 function preloadPages() {
-    const pages = ["login.html", "register.html", "configuration.html", "contact.html", "about.html"];
+    const pages = ["login.html", "register.html", "configuration.html", "contact.html"];
 
     // Fetch all pages in parallel and store the content
     const fetchPromises = pages.map(page =>
@@ -95,11 +95,6 @@ function setupNavigationListeners() {
         if (event.target && event.target.id === 'configuration-button') {
             showPage("configuration.html");
         }
-    });
-
-    // Event listener for About Redirect
-    document.getElementById('about-link').addEventListener('click', function() {
-        showPage("about.html");
     });
 
     // Event listener for Contact Redirect
@@ -406,21 +401,21 @@ function startNewGame() {
 
     }
 }
-    function validateAllFields() {
-        if (selectedFireKey === "") {
-            document.getElementById("fire-key").focus();
-            return false;
-        }
-
-        const minutesInput = document.getElementById("game-time-minutes");
-        const secondsInput = document.getElementById("game-time-seconds");
-
-        if (!minutesInput.value || !secondsInput.value) {
-            return false;
-        }
-
-        return true;
+function validateAllFields() {
+    if (selectedFireKey === "") {
+        document.getElementById("fire-key").focus();
+        return false;
     }
+
+    const minutesInput = document.getElementById("game-time-minutes");
+    const secondsInput = document.getElementById("game-time-seconds");
+
+    if (!minutesInput.value || !secondsInput.value) {
+        return false;
+    }
+
+    return true;
+}
 
 function toggleLeaderboard() {
     const leaderboardSection = document.getElementById("leaderboard-section");
@@ -615,7 +610,7 @@ function startEnemyMovement() {
         if (!gameActive || gamePaused) return;
 
         if (accelerationCount < 4) { // Maximum 4 Accelerations
-            speedFactor += 0.25;
+            speedFactor += 1.25;
             accelerationCount++;
         }
     }, 5000);
@@ -1084,3 +1079,38 @@ function updateLeaderboard(username, score) {
     // saving
     localStorage.setItem("leaderboardData", JSON.stringify(leaderboardData));
 }
+
+/*****************************************  about.html ******************************************************/
+
+const aboutModal = document.getElementById('about-modal');
+const closeAboutBtn = document.getElementById('close-about');
+
+function openAbout() {
+    aboutModal.showModal();
+    if (gameRunning && isPaused) {
+        pauseGame();
+    }
+}
+
+function closeAbout() {
+    aboutModal.close();
+    if (gameRunning && isPaused) {
+        pauseGame(); // this will toggle it back to playing
+    }
+}
+
+// Close when clicking X button
+closeAboutBtn.addEventListener('click', closeAbout);
+
+// Close when clicking outside the modal
+aboutModal.addEventListener('click', (e) => {
+    const rect = aboutModal.getBoundingClientRect();
+    if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+    ) {
+        closeAbout();
+    }
+});
