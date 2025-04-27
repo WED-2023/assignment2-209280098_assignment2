@@ -96,6 +96,11 @@ function setupNavigationListeners() {
             showPage("configuration.html");
         }
     });
+    // Event listener for about modal
+    document.getElementById('about-link').addEventListener('click', function() {
+        const aboutModal = document.getElementById('about-modal');
+        aboutModal.showModal();
+    });
 
     // Event listener for Contact Redirect
     document.getElementById('contact-link').addEventListener('click', function() {
@@ -295,6 +300,9 @@ function initializeConfiguration() {
 
     // Leader Boards Event
     document.getElementById("show-leaderboard").addEventListener("click", function() {
+        toggleLeaderboard();
+    });
+    document.getElementById("view-leaderboard").addEventListener("click", function() {
         toggleLeaderboard();
     });
 
@@ -1009,7 +1017,7 @@ function closeExitConfirm() {
 
 // back to configuration
 function exitToConfiguration() {
-    window.location.href = "index.html";
+    window.location.href = "configuration.html";
 }
 
 
@@ -1024,7 +1032,6 @@ function endGame(reason) {
     // Final Results
     const gameEndScreen = document.getElementById("game-end");
     const gameResult = document.getElementById("game-result");
-    const gameStatus = document.getElementById("game-status");
     const finalScore = document.getElementById("final-score-value");
 
     finalScore.textContent = gameScore;
@@ -1101,6 +1108,7 @@ function closeAbout() {
 
 // Close when clicking X button
 closeAboutBtn.addEventListener('click', closeAbout);
+view-leaderboard.addEventListener('click', closeAbout);
 
 // Close when clicking outside the modal
 aboutModal.addEventListener('click', (e) => {
@@ -1115,4 +1123,26 @@ aboutModal.addEventListener('click', (e) => {
     }
 });
 
+// Close when clicking outside the modal
+// Close when clicking X button
+closeAboutBtn.addEventListener('click', closeAbout);
 
+// Close when clicking outside the modal
+aboutModal.addEventListener('click', (e) => {
+    const rect = aboutModal.getBoundingClientRect();
+    if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+    ) {
+        closeAbout();
+    }
+});
+
+// Close when pressing Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === "Escape" && aboutModal.open) {
+        closeAbout();
+    }
+});

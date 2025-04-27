@@ -1,3 +1,10 @@
+## 📄 Submission Info
+
+- **Name:** Lidor Mashiach
+- **ID:** 209280098
+- **Bonus Status:** Completed
+
+
 # Space Game - by Lidor Mashiach 🚀
 
 ## Overview 🌌
