@@ -1114,3 +1114,5 @@ aboutModal.addEventListener('click', (e) => {
         closeAbout();
     }
 });
+
+
